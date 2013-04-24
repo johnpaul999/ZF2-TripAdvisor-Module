@@ -105,7 +105,7 @@ class Review {
 	 */
 	protected function extractDescription() {
 		$desc = $this->entry->getDescription();
-		$pattern = '/^TripAdvisor[[:ascii:]]+\: ([0-5])([[:alnum:]\s]+)([<br\/>\s]+)(.+)$/is';
+		$pattern = '/^TripAdvisor[[:ascii:]]+\: ([0-5])([[:alnum:]\s]+)([<br\/>\s]+>)(.+)$/is';
 		if(preg_match($pattern, $desc, $match)) {
 			$this->rating = (int) $match[1];
 			$this->description = trim($match[4]);
