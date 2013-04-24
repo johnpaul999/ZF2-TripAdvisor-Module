@@ -61,39 +61,6 @@ class Feed {
 	}
 	
 	/**
-	 * Return a cache ket for this feed
-	 * @return string
-	 */
-	public function getCacheKey() {
-		if(!$this->feedUri) {
-			throw new \RuntimeException('Cannot create a cache key without first knowing the feed uri');
-		}
-		return md5($this->feedUri);
-	}
-	
-	/**
-	 * @return bool
-	 */
-	protected function cacheXml() {
-		if(!$this->cache) {
-			return false;
-		}
-		$key = $this->getCacheKey();
-		return $this->cache->setItem($key, $this->feed);
-	}
-	
-	protected function getCachedXml() {
-		if(!$this->cache) {
-			return false;
-		}
-		$key = $this->getCacheKey();
-		if($this->cache->hasItem($key)) {
-			return $this->cache->getItem($key);
-		}
-		return false;
-	}
-	
-	/**
 	 * Set remote feed uri
 	 * @param string $feedUri
 	 * @return Feed $this
@@ -120,16 +87,16 @@ class Feed {
 		if($this->feed) {
 			return $this->feed;
 		}
+		if($this->cache) {
+			Reader::setCache($this->cache);
+		}
 		if(NULL === $this->feedUri) {
 			throw new \RuntimeException('No feed uri has been set. Cannot load RSS');
 		}
-		if(! $this->feed = $this->getCachedXml()) {
-			try {
-				$this->feed = Reader::import($this->feedUri);
-				$this->cacheXml();
-			} catch(\Exception $e) {
-				throw new \RuntimeException('Failed to load the feed '.$this->feedUri, NULL, $e);
-			}
+		try {
+			$this->feed = Reader::import($this->feedUri);
+		} catch(\Exception $e) {
+			throw new \RuntimeException('Failed to load the feed '.$this->feedUri, NULL, $e);
 		}
 		foreach($this->feed as $entry) {
 			$this->entries[] = new Review($entry);
