@@ -1,0 +1,11 @@
+<?php
+/**
+ * Configuration for the SSL Module Thingy
+ * @author George Steel <george@net-glue.co.uk>
+ * @copyright Copyright (c) 2012 Net Glue Ltd (http://netglue.co)
+ * @license http://opensource.org/licenses/MIT
+ */
+
+return array(
+
+);

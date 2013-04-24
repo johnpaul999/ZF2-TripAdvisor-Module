@@ -1,0 +1,33 @@
+{
+  "name" : "netglue/zf2-tripadvisor-module",
+  "description" : "ZF2 module that provides useful tools for dealing with tripadvisor feeds for a specific location",
+  "type" : "library",
+  "license" : "MIT",
+  "keywords" : [
+    "zf2",
+    "zend",
+    "module",
+    "netglue",
+    "ssl"
+  ],
+  "homepage" : "https://bitbucket.org/netglue/zf2-tripadvisor-module",
+  "support" : {
+    "issues" : "https://bitbucket.org/netglue/zf2-tripadvisor-module/issues"
+  },
+  "authors" : [
+    {
+      "name" : "George Steel",
+      "email" : "george@net-glue.co.uk",
+      "homepage" : "http://netglue.co/"
+    }
+  ],
+  "require" : {
+    "php" : ">=5.3.3",
+    "zendframework/zendframework" : "2.*"
+  },
+  "autoload" : {
+    "psr-0" : {
+      "NetglueTripAdvisor" : "src/"
+    }
+  }
+}
