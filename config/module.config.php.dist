@@ -1,11 +1,32 @@
 <?php
 /**
- * Configuration for the SSL Module Thingy
+ * Example Configuration for the TripAdvisor Module
  * @author George Steel <george@net-glue.co.uk>
  * @copyright Copyright (c) 2012 Net Glue Ltd (http://netglue.co)
  * @license http://opensource.org/licenses/MIT
  */
 
 return array(
-
+	
+	/**
+	 * See ./module.config.php for comments
+	 */
+	
+	'netglue_tripadvisor' => array(
+		
+		'feed' => 'http://www.tripadvisor.co.uk/Feeds-d187591-treviews.xml', // The Ritz, London!
+		
+		'cache_by_default' => true,
+		
+		'cache' => array(
+			'adapter' => array(
+				'name' => 'filesystem',
+				'options' => array(
+					'cache_dir' => '/tmp',
+				),
+			),
+		),
+		
+	),
+	
 );
