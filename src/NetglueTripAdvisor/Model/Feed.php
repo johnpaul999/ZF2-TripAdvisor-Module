@@ -133,4 +133,16 @@ class Feed {
 		}
 		return array_slice($this->entries, 0, $count);
 	}
+	
+	/**
+	 * Return feed title
+	 * @return string
+	 */
+	public function getTitle() {
+		return $this->getFeed()->getTitle();
+	}
+	
+	public function getLink() {
+		return $this->getFeed()->getLink();
+	}
 }

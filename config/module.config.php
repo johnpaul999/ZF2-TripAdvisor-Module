@@ -64,4 +64,36 @@ $config = array(
  */
 return array(
 	'netglue_tripadvisor' => $config,
+	
+	/**
+	 * The following sets up the view helper to render the reviews to a view script
+	 */
+	'view_manager' => array(
+		
+		'template_map' => array(
+			
+			// Override this in your own config to set a different view script for the helper
+			'netglue_tripadvisor/reviews' => __DIR__ . '/../view/reviews-template.phtml',
+			
+		),
+	),
+	/**
+	 * The view helper itself is not very interesting - it just receives the single
+	 * configured feed and renders a partial passing the feed onto the view script
+	 */
+	'view_helpers' => array(
+		'factories' => array(
+			'NetglueTripAdvisor\View\Helper\Reviews' => function($sm) {
+				$sl = $sm->getServiceLocator();
+				$feed = $sl->get('NetglueTripAdvisor\Model\Feed');
+				$helper = new NetglueTripAdvisor\View\Helper\Reviews;
+				$helper->setFeed($feed);
+				return $helper;
+			},
+		),
+		'aliases' => array(
+			'ngTripAdvisorFeed' => 'NetglueTripAdvisor\View\Helper\Reviews',
+		),
+	),
+		
 );

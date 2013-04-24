@@ -1,0 +1,51 @@
+<?php
+
+/**
+ * Sample template for rendering a Trip Advisor Feed
+ */
+
+$mainUri = $this->feed->getLink();
+
+?>
+
+<div class="reviewHeading hero-unit">
+	<h1><?php echo $this->escapeHtml($this->feed->getTitle()); ?></h1>
+	<p class="lead">Here are our most recent reviews on
+		<a href="<?php echo $mainUri; ?>" title="Read more reviews at Trip Advisor">TripAdvisor</a>.
+		You can <a href="<?php echo $mainUri; ?>" title="Read more reviews at Trip Advisor">read more of them here</a>...</p>
+</div>
+
+<div class="row reviewList">
+<?php foreach($this->feed->getReviews() as $review): ?>
+	
+	<?php
+	$revLink = $review->getLink();
+	?>
+	<div class="span4">
+		<div class="well">
+			<h4><a href="<?php echo $revLink; ?>" title="Read the full review..."
+				><?php echo $this->escapeHtml($review->getTitle()); ?></a></h4>
+			<blockquote>
+				<p><?php echo $review->getBody(); ?></p>
+				<p>
+					<small>
+						<?php echo $this->escapeHtml($review->getAuthor()); ?> on
+						<span class="date">
+							<?php echo $review->getDateCreated()->format('jS F Y'); ?>
+						</span>
+					</small>
+				</p>
+				<p class="rating"><?php echo str_repeat('<i class="icon icon-star"></i>', $review->getStarRating()); ?></p>
+			</blockquote>
+			<p>
+				<small class="muted">
+					<a class="muted" href="<?php echo $revLink; ?>" title="Read the full review...">
+						Read the full review here
+					</a>&hellip;
+				</small>
+			</p>
+		</div>
+	</div>
+	
+<?php endforeach; ?>
+</div>
