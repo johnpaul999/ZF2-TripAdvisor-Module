@@ -12,6 +12,23 @@
 $config = array(
 	'feed' => NULL, // To use the single feed service, you have to provide the full uri of a trip advisor feed
 	
+	/**
+	 * Provide a cache configuration
+	 */
+	
+	'cache_by_default' => true,
+	
+	'cache' => array(
+		'adapter' => array(
+			'name' => 'filesystem',
+			'options' => array(
+				
+			),
+		),
+		'plugins' => array(
+			
+		),
+	),
 );
 
 /**

@@ -3,6 +3,7 @@
 namespace NetglueTripAdvisor\Model;
 
 use Zend\Feed\Reader\Reader;
+use Zend\Cache\Storage\StorageInterface as Cache;
 
 class Feed {
 	
@@ -25,6 +26,12 @@ class Feed {
 	protected $entries = array();
 	
 	/**
+	 * Cache Adapter
+	 * @var Cache|NULL
+	 */
+	protected $cache;
+	
+	/**
 	 * Optionally provide the feed uri to the constructor
 	 * @param string $feedUri
 	 * @return void
@@ -33,6 +40,57 @@ class Feed {
 		if(NULL !== $feedUri) {
 			$this->setFeedUri($feedUri);
 		}
+	}
+	
+	/**
+	 * Set Cache
+	 * @param Cache $cache
+	 * @return Feed $this
+	 */
+	public function setCache(Cache $cache) {
+		$this->cache = $cache;
+		return $this;
+	}
+	
+	/**
+	 * Return cache adapter
+	 * @return Cache|NULL
+	 */
+	public function getCache() {
+		return $this->cache;
+	}
+	
+	/**
+	 * Return a cache ket for this feed
+	 * @return string
+	 */
+	public function getCacheKey() {
+		if(!$this->feedUri) {
+			throw new \RuntimeException('Cannot create a cache key without first knowing the feed uri');
+		}
+		return md5($this->feedUri);
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function cacheXml() {
+		if(!$this->cache) {
+			return false;
+		}
+		$key = $this->getCacheKey();
+		return $this->cache->setItem($key, $this->feed);
+	}
+	
+	protected function getCachedXml() {
+		if(!$this->cache) {
+			return false;
+		}
+		$key = $this->getCacheKey();
+		if($this->cache->hasItem($key)) {
+			return $this->cache->getItem($key);
+		}
+		return false;
 	}
 	
 	/**
@@ -65,16 +123,18 @@ class Feed {
 		if(NULL === $this->feedUri) {
 			throw new \RuntimeException('No feed uri has been set. Cannot load RSS');
 		}
-		try {
-			$rss = Reader::import($this->feedUri);
-		} catch(\Exception $e) {
-			throw new \RuntimeException('Failed to load the feed '.$this->feedUri, NULL, $e);
+		if(! $this->feed = $this->getCachedXml()) {
+			try {
+				$this->feed = Reader::import($this->feedUri);
+				$this->cacheXml();
+			} catch(\Exception $e) {
+				throw new \RuntimeException('Failed to load the feed '.$this->feedUri, NULL, $e);
+			}
 		}
-		$this->feed = $rss;
-		foreach($rss as $entry) {
+		foreach($this->feed as $entry) {
 			$this->entries[] = new Review($entry);
 		}
-		return $rss;
+		return $this->feed;
 	}
 	
 	/**

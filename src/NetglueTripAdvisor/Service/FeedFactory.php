@@ -29,7 +29,10 @@ class FeedFactory implements FactoryInterface {
 			throw new \RuntimeException('No feed has been specified in configuration: [\'netglue_tripadvisor\'][\'feed\']');
 		}
 		$feed = new Feed($options['feed']);
-		// Implement caching here...
+		if($options['cache_by_default'] === true) {
+			$cache = $serviceLocator->get('NetglueTripAdvisor\Cache');
+			$feed->setCache($cache);
+		}
 		return $feed;
 	}
 	
