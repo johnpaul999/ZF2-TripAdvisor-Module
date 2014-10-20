@@ -1,5 +1,9 @@
 # ZF2 Trip Advisor Reviews Module
 
+[![Build Status](https://travis-ci.org/netglue/ZF2-Prismic-Module.svg?branch=master)](https://travis-ci.org/netglue/ZF2-Prismic-Module)
+[![Coverage Status](https://img.shields.io/coveralls/netglue/ZF2-Prismic-Module.svg)](https://coveralls.io/r/netglue/ZF2-Prismic-Module)
+
+
 ## Install
 
 The only supported method of installation is with composer:

@@ -1,33 +1,36 @@
 {
-  "name" : "netglue/zf2-tripadvisor-module",
-  "description" : "ZF2 module that provides easy syndication of tripadvisor reviews for a zend framework website",
-  "type" : "module",
-  "license" : "MIT",
-  "keywords" : [
-    "zf2",
-    "zend",
-    "module",
-    "netglue",
-    "tripadvisor"
-  ],
-  "homepage" : "https://github.com/netglue/ZF2-TripAdvisor-Module",
-  "support" : {
-    "issues" : "https://github.com/netglue/ZF2-TripAdvisor-Module/issues"
-  },
-  "authors" : [
-    {
-      "name" : "George Steel",
-      "email" : "george@net-glue.co.uk",
-      "homepage" : "http://netglue.co/"
+    "name" : "netglue/zf2-tripadvisor-module",
+    "description" : "ZF2 module that provides easy syndication of tripadvisor reviews for a zend framework website",
+    "type" : "module",
+    "license" : "MIT",
+    "keywords" : [
+        "zf2",
+        "zend",
+        "module",
+        "netglue",
+        "tripadvisor"
+    ],
+    "homepage" : "https://github.com/netglue/ZF2-TripAdvisor-Module",
+    "support" : {
+        "issues" : "https://github.com/netglue/ZF2-TripAdvisor-Module/issues"
+    },
+    "authors" : [
+        {
+            "name" : "George Steel",
+            "email" : "george@net-glue.co.uk",
+            "homepage" : "http://netglue.co/"
+        }
+    ],
+    "require" : {
+        "php" : ">=5.3.3",
+        "zendframework/zendframework" : "2.*"
+    },
+    "require-dev" : {
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "NetglueTripAdvisor" : [ "src/", "tests/" ]
+        }
     }
-  ],
-  "require" : {
-    "php" : ">=5.3.3",
-    "zendframework/zendframework" : "2.*"
-  },
-  "autoload" : {
-    "psr-0" : {
-      "NetglueTripAdvisor" : "src/"
-    }
-  }
 }
