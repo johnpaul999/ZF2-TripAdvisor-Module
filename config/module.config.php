@@ -10,21 +10,7 @@
  * Options for the module that are critical to its operation
  */
 $config = array(
-	
-	/**
-	 * Simplest operation - Provide a feed uri, turn on cache_by_default and
-	 * uncomment the cache adapter config and it should be working out of the box
-	 * with:
-	 * $feed = $serviceLocator->get('NetglueTripAdvisor\Model\Feed');
-	 * $reviews = $feed->getReviews();
-	 * foreach($reviews as $r) {
-	 *   var_dump($r->getTitle());
-	 *   var_dump($r->getStarRating()); // etc...
-	 * }
-	 */
-	
-	'feed' => NULL, // To use the single feed service, you have to provide the full uri of a trip advisor feed
-	
+
 	/**
 	 * This should be set to true if you want the module to attempt caching.
 	 * Bear in mind that all that happens in reality, is that any cache storage engine
@@ -35,12 +21,12 @@ $config = array(
 	 *
 	 */
 	'cache_by_default' => false,
-	
+
 	/**
 	 * A default filesystem cache adapter that will cache to /tmp
 	 *
 	 * If there is a system wide cache available, and you'd prefer that to be used,
-	 * Just make sure that the whole cache option is commented out and 
+	 * Just make sure that the whole cache option is commented out and
 	 * NetglueTripAdvisor\Service\CacheFactory will return the cache you have setup
 	 * in main config.
 	 */
@@ -49,14 +35,24 @@ $config = array(
 		'adapter' => array(
 			'name' => 'filesystem',
 			'options' => array(
-				
+
 			),
 		),
 		'plugins' => array(
-			
+
 		),
 	),
 	*/
+
+	'scraper' => array(
+	    'url' => null,
+	    'httpClientOptions' => array(
+	        'maxredirects'    => 2,
+            'useragent'       => 'NetGlue TripAdvisor Module',
+            'timeout'         => 2,
+	    ),
+	    'reviewClass' => 'reviewSelector',
+	),
 );
 
 /**
@@ -64,17 +60,17 @@ $config = array(
  */
 return array(
 	'netglue_tripadvisor' => $config,
-	
+
 	/**
 	 * The following sets up the view helper to render the reviews to a view script
 	 */
 	'view_manager' => array(
-		
+
 		'template_map' => array(
-			
+
 			// Override this in your own config to set a different view script for the helper
 			'netglue_tripadvisor/reviews' => __DIR__ . '/../view/reviews-template.phtml',
-			
+
 		),
 	),
 	/**
@@ -95,5 +91,5 @@ return array(
 			'ngTripAdvisorFeed' => 'NetglueTripAdvisor\View\Helper\Reviews',
 		),
 	),
-		
+
 );

@@ -1,0 +1,5 @@
+*.lock
+phpunit.xml
+build/
+vendor/
+bin/
