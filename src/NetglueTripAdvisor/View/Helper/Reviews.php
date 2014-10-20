@@ -3,8 +3,6 @@ namespace NetglueTripAdvisor\View\Helper;
 
 use Zend\View\Helper\AbstractHelper;
 
-use NetglueTripAdvisor\Model\Feed;
-
 class Reviews extends AbstractHelper
 {
 
@@ -22,8 +20,8 @@ class Reviews extends AbstractHelper
 
     /**
      * Construct with an array of reviews
-     * @param array $reviews
-     * @param string $url
+     * @param  array  $reviews
+     * @param  string $url
      * @return void
      */
     public function __construct(array $reviews, $url)
@@ -34,7 +32,7 @@ class Reviews extends AbstractHelper
 
     /**
      * Set Reviews Array
-     * @param array $reviews
+     * @param  array $reviews
      * @return self
      */
     public function setReviews(array $reviews)
@@ -46,7 +44,7 @@ class Reviews extends AbstractHelper
 
     /**
      * Set Reviews URL
-     * @param string $url
+     * @param  string $url
      * @return self
      */
     public function setReviewsUrl($url)

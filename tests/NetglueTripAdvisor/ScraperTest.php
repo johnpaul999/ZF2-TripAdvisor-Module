@@ -101,7 +101,7 @@ class ScraperTest extends \PHPUnit_Framework_TestCase
             $services = bootstrap::getServiceManager();
             $scraper = $services->get('NetglueTripAdvisor\Scraper');
             $scraper->setHtml($this->fixtureHtml);
-            $this->reviews = $scraper->extract();
+            $this->reviews = $scraper->getReviews();
         }
 
         return $this->reviews;

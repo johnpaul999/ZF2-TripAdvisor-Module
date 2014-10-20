@@ -10,11 +10,12 @@ use Zend\Stdlib\ArrayUtils;
 use Zend\Http\Client;
 use Zend\Http\Client\Exception\ExceptionInterface as HttpException;
 
-use DomDocument;
+use DOMDocument;
 use DOMXpath;
-use DomElement;
+use DOMElement;
 use DateTime;
 use Zend\Uri\Uri;
+use Zend\Cache\Storage\StorageInterface as CacheStorage;
 
 class Scraper
 {
@@ -33,6 +34,18 @@ class Scraper
      * @var string
      */
     private $html;
+
+    /**
+     * Reviews array
+     * @var array
+     */
+    private $reviews;
+
+    /**
+     * Cache
+     * @var CacheStorage|null
+     */
+    private $cache;
 
     /**
      * @param ScraperOptions|Traversable|array $options Options Object or array
@@ -109,6 +122,18 @@ class Scraper
     public function getHtml()
     {
         if (!$this->html) {
+            $options = $this->getOptions();
+            $cacheId = 'TripAdvisor_Reviews_' . md5($options->getUrl());
+            $cache = $this->getCache();
+            if ($cache) {
+                $data = $cache->getItem($cacheId);
+                if (false !== $data) {
+                    $this->setHtml($data);
+
+                    return $data;
+                }
+            }
+
             $client = $this->getHttpClient();
             try {
                 $response = $client->send();
@@ -116,6 +141,9 @@ class Scraper
                     throw new Exception\RuntimeException('Failed to load remote source HTML: '.$response->getReasonPhrase(), $response->getStatusCode());
                 }
                 $this->setHtml($response->getBody());
+                if ($cache) {
+                    $cache->setItem($cacheId, $this->html);
+                }
             } catch (HttpException $e) {
                 throw new Exception\RuntimeException('Failed to load remote source HTML', null, $e);
             }
@@ -123,6 +151,30 @@ class Scraper
 
         return $this->html;
     }
+
+    /**
+     * Set the cache
+     *
+     * @param  CacheStorage $cache
+     * @return self
+     */
+    public function setCache(CacheStorage $cache)
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
+
+    /**
+     * Get the cache
+     *
+     * @return CacheStorage|null
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
+
 
     /**
      * Set the HTML to be parsed
@@ -136,7 +188,24 @@ class Scraper
         return $this;
     }
 
-    public function extract()
+    /**
+     * Return the array of user reviews
+     * @return array
+     */
+    public function getReviews()
+    {
+        if (!$this->reviews) {
+            $this->reviews = $this->extract();
+        }
+
+        return $this->reviews;
+    }
+
+    /**
+     * Extract the reviews array from the remote html
+     * @return array an array of Review objects
+     */
+    protected function extract()
     {
         $libXmlErrorHandlerState = libxml_use_internal_errors(true);
         $dom = new DomDocument;
@@ -160,6 +229,11 @@ class Scraper
         }
     }
 
+    /**
+     * Extract a single review into a review instance
+     * @param  DomElement $node
+     * @return Review
+     */
     public function extractReview(DomElement $node)
     {
         $review = new Review;

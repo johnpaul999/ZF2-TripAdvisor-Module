@@ -11,39 +11,6 @@
  */
 $config = array(
 
-	/**
-	 * This should be set to true if you want the module to attempt caching.
-	 * Bear in mind that all that happens in reality, is that any cache storage engine
-	 * created is simply provided to Zend\Feed\Reader\Reader::setCache() ultimately,
-	 * so if you're consuming feeds in other ways using the Zend Reader, you might be
-	 * better off explicity setting the cache in Reader yourself somewhere else and
-	 * leaving the cache turned off here.
-	 *
-	 */
-	'cache_by_default' => false,
-
-	/**
-	 * A default filesystem cache adapter that will cache to /tmp
-	 *
-	 * If there is a system wide cache available, and you'd prefer that to be used,
-	 * Just make sure that the whole cache option is commented out and
-	 * NetglueTripAdvisor\Service\CacheFactory will return the cache you have setup
-	 * in main config.
-	 */
-	/*
-	'cache' => array(
-		'adapter' => array(
-			'name' => 'filesystem',
-			'options' => array(
-
-			),
-		),
-		'plugins' => array(
-
-		),
-	),
-	*/
-
 	'scraper' => array(
 	    'url' => null,
 	    'httpClientOptions' => array(
@@ -60,6 +27,13 @@ $config = array(
  */
 return array(
 	'netglue_tripadvisor' => $config,
+
+    'caches' => array(
+        'NetglueTripAdvisor\Cache' => array(
+            'adapter' => 'filesystem',
+            'ttl' => 3600,
+        ),
+    ),
 
 	/**
 	 * The following sets up the view helper to render the reviews to a view script

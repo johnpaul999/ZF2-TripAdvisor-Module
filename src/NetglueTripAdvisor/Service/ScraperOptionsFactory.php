@@ -7,9 +7,10 @@ namespace NetglueTripAdvisor\Service;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use NetglueTripAdvisor\Scraper;
 
-class ScraperFactory implements FactoryInterface
+use NetglueTripAdvisor\ScraperOptions;
+
+class ScraperOptionsFactory implements FactoryInterface
 {
     /**
      * Return the configured Scraper
@@ -18,10 +19,12 @@ class ScraperFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('NetglueTripAdvisor\ScraperOptions');
-        $scraper = new Scraper($config);
+        $config = $serviceLocator->get('Config');
+        $options = isset($config['netglue_tripadvisor']['scraper']) ?
+            $config['netglue_tripadvisor']['scraper'] :
+            array();
 
-        return $scraper;
+        return new ScraperOptions($options);
     }
 
 }
