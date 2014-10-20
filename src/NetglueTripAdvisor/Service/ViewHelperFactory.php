@@ -8,6 +8,8 @@ namespace NetglueTripAdvisor\Service;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
+use NetglueTripAdvisor\View\Helper\Reviews as ViewHelper;
+
 class ViewHelperFactory implements FactoryInterface
 {
     /**

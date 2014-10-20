@@ -31,6 +31,15 @@ class Reviews extends AbstractHelper
     }
 
     /**
+     * Invoke
+     * @return self
+     */
+    public function __invoke()
+    {
+        return $this;
+    }
+
+    /**
      * Set Reviews Array
      * @param  array $reviews
      * @return self
@@ -58,18 +67,23 @@ class Reviews extends AbstractHelper
      * Get Reviews URL
      * @return string
      */
-    public function getReviewsUrl($url)
+    public function getReviewsUrl()
     {
         return $this->url;
     }
 
     /**
-     * Get Reviews Array
+     * Get Reviews Array (There are normally 10 max)
+     * @param int|null $count max number of reviews to return or null to return all found
      * @return array
      */
-    public function getReviews()
+    public function getReviews($count = null)
     {
-        return $this->reviews;
+        if(is_null($count) || $count >= count($this->reviews)) {
+            return $this->reviews;
+        }
+
+        return array_slice($this->reviews, 0, $count--);
     }
 
     /**

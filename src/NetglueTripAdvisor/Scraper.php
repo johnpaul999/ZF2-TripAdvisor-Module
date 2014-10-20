@@ -123,13 +123,12 @@ class Scraper
     {
         if (!$this->html) {
             $options = $this->getOptions();
-            $cacheId = 'TripAdvisor_Reviews_' . md5($options->getUrl());
+            $cacheId = $this->getCacheId($options->getUrl());
             $cache = $this->getCache();
-            if ($cache) {
-                $data = $cache->getItem($cacheId);
-                if (false !== $data) {
+            if ($cache && $cache->hasItem($cacheId)) {
+                $data = $cache->getItem($cacheId, $success);
+                if ($success) {
                     $this->setHtml($data);
-
                     return $data;
                 }
             }
@@ -158,7 +157,7 @@ class Scraper
      * @param  CacheStorage $cache
      * @return self
      */
-    public function setCache(CacheStorage $cache)
+    public function setCache(CacheStorage $cache = null)
     {
         $this->cache = $cache;
 
@@ -175,6 +174,19 @@ class Scraper
         return $this->cache;
     }
 
+    /**
+     * Return the cache ID used for an url
+     * @param string $url
+     * @return string
+     */
+    public function getCacheId($url = null)
+    {
+        if(null === $url) {
+            $url = $this->getOptions()->getUrl();
+        }
+        return 'TripAdvisor_Reviews_' . md5((string) $url);
+    }
+
 
     /**
      * Set the HTML to be parsed
@@ -184,6 +196,7 @@ class Scraper
     public function setHtml($html)
     {
         $this->html = (string) $html;
+        $this->reviews = null;
 
         return $this;
     }
@@ -281,7 +294,7 @@ class Scraper
             $review->setTitle(trim($nodes->item(0)->nodeValue));
         }
         /**
-         * Rating
+         * Rating as an alt tag in an image
          */
         $nodes = $xpath->query("//div[contains(@class, 'rating')]/span[contains(@class, 'rate')]/img");
         if ($nodes->length === 1) {
@@ -297,8 +310,21 @@ class Scraper
          */
         $nodes = $xpath->query("//div[contains(@class, 'rating')]/span[contains(@class, 'ratingDate')]");
         if ($nodes->length === 1) {
-            $dateString = $nodes->item(0)->getAttribute('title');
-            $review->setDate(DateTime::createFromFormat('d F Y', $dateString));
+            $span = $nodes->item(0);
+            if($span->hasAttribute('title')) {
+                $dateString = $span->getAttribute('title');
+                $date = DateTime::createFromFormat('d F Y', $dateString);
+                if(false !== $date) {
+                    $review->setDate($date);
+                }
+            } else {
+                if(preg_match('/([0-9]{1,2}\s[\w]+\s[0-9]{4})/i', trim($span->nodeValue), $match)) {
+                    $date = DateTime::createFromFormat('d F Y', $match[1]);
+                    if(false !== $date) {
+                        $review->setDate($date);
+                    }
+                }
+            }
         }
 
         /**

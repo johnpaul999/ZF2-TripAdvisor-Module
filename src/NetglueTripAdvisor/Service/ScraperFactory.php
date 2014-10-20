@@ -20,7 +20,8 @@ class ScraperFactory implements FactoryInterface
     {
         $config = $serviceLocator->get('NetglueTripAdvisor\ScraperOptions');
         $scraper = new Scraper($config);
-
+        $cache = $serviceLocator->get('NetglueTripAdvisor\Cache');
+        $scraper->setCache($cache);
         return $scraper;
     }
 

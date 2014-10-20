@@ -19,13 +19,15 @@ use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 /**
- * Bootstrap Listener
+ * View Helper Provider
  */
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
 
 class Module implements
     AutoloaderProviderInterface,
     ServiceProviderInterface,
-    ConfigProviderInterface
+    ConfigProviderInterface,
+    ViewHelperProviderInterface
 {
 
     /**
@@ -62,6 +64,23 @@ class Module implements
     public function getServiceConfig()
     {
         return include __DIR__ . '/../../config/services.config.php';
+    }
+
+    /**
+	 * Return view helper plugin config
+	 * @return array
+	 * @implements ViewHelperProviderInterface
+	 */
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'NetglueTripAdvisor\View\Helper\Reviews' => 'NetglueTripAdvisor\Service\ViewHelperFactory',
+            ),
+            'aliases' => array(
+                'tripAdvisor' => 'NetglueTripAdvisor\View\Helper\Reviews',
+            ),
+        );
     }
 
 }

@@ -4,34 +4,34 @@
  * Sample template for rendering a Trip Advisor Feed
  */
 
-$mainUri = $this->feed->getLink();
+$mainUri = $this->tripAdvisor()->getReviewsUrl();
 
 ?>
 
 <div class="reviewHeading hero-unit">
-	<h1><?php echo $this->escapeHtml($this->feed->getTitle()); ?></h1>
+	<h1>Trip Advisor Reviews</h1>
 	<p class="lead">Here are our most recent reviews on
 		<a href="<?php echo $mainUri; ?>" title="Read more reviews at Trip Advisor">TripAdvisor</a>.
 		You can <a href="<?php echo $mainUri; ?>" title="Read more reviews at Trip Advisor">read more of them here</a>...</p>
 </div>
 
 <div class="row reviewList">
-<?php foreach($this->feed->getReviews() as $review): ?>
+<?php foreach($this->tripAdvisor()->getReviews() as $review): ?>
 	
 	<?php
-	$revLink = $review->getLink();
+	$revLink = $review->getUrl();
 	?>
 	<div class="span4">
 		<div class="well">
 			<h4><a href="<?php echo $revLink; ?>" title="Read the full review..."
 				><?php echo $this->escapeHtml($review->getTitle()); ?></a></h4>
 			<blockquote>
-				<p><?php echo $review->getBody(); ?></p>
+				<p><?php echo $review->getExcerpt(); ?></p>
 				<p>
 					<small>
 						<?php echo $this->escapeHtml($review->getAuthor()); ?> on
 						<span class="date">
-							<?php echo $review->getDateCreated()->format('jS F Y'); ?>
+							<?php echo $review->getDate()->format('jS F Y'); ?>
 						</span>
 					</small>
 				</p>

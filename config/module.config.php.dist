@@ -1,9 +1,6 @@
 <?php
 /**
  * Example Configuration for the TripAdvisor Module
- * @author George Steel <george@net-glue.co.uk>
- * @copyright Copyright (c) 2012 Net Glue Ltd (http://netglue.co)
- * @license http://opensource.org/licenses/MIT
  */
 
 return array(
@@ -13,20 +10,28 @@ return array(
 	 */
 	
 	'netglue_tripadvisor' => array(
-		
-		'feed' => 'http://www.tripadvisor.co.uk/Feeds-d187591-treviews.xml', // The Ritz, London!
-		
-		'cache_by_default' => true,
-		
-		'cache' => array(
-			'adapter' => array(
-				'name' => 'filesystem',
-				'options' => array(
-					'cache_dir' => '/tmp',
-				),
-			),
+		'scraper' => array(
+		    // Change this unless you want to display reviews for the London Ritz
+		    'url' => 'http://www.tripadvisor.co.uk/Hotel_Review-g186338-d187591-Reviews-The_Ritz_London-London_England.html'
 		),
-		
+	),
+	
+	'caches' => array(
+        'NetglueTripAdvisor\Cache' => array(
+            'adapter' => 'filesystem',
+            'options' => array(
+                'ttl' => 3600 * 24,
+                'dirPermission' => 0777,
+                'filePermission' => 0666,
+                //'cacheDir' => '/path/to/your/preferred/cachedir',
+            ),
+        ),
+    ),
+    
+    'view_manager' => array(
+		'template_map' => array(
+		    // 'netglue_tripadvisor/reviews' => '/path/to/a/nice/view/script-to-render-your-reviews.phtml'
+		),
 	),
 	
 );

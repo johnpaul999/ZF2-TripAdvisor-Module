@@ -17,4 +17,8 @@
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
     
+    <php>
+        <var name="SKIP_REMOTE" value="1"/>
+    </php>
+    
 </phpunit>

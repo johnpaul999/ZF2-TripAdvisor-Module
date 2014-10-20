@@ -142,5 +142,86 @@ class ScraperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('ปฏิภาณ แ', $last->getAuthor());
     }
 
+    public function testLocatorHasDefaultCache()
+    {
+        $services = bootstrap::getServiceManager();
+        $this->assertTrue($services->has('NetglueTripAdvisor\Cache'));
+        $cache = $services->get('NetglueTripAdvisor\Cache');
+        $this->assertInstanceOf('Zend\Cache\Storage\Adapter\Filesystem', $cache);
+    }
+
+    public function testNonMatchingHtmlReturnsEmptySet()
+    {
+        $services = bootstrap::getServiceManager();
+        $scraper = $services->get('NetglueTripAdvisor\Scraper');
+        $scraper->setHtml(file_get_contents(__DIR__ . '/../fixtures/blank.html'));
+        $reviews = $scraper->getReviews();
+        $this->assertInternalType('array', $reviews);
+        $this->assertCount(0, $reviews);
+    }
+
+    public function testRemoteLoadOfTheLondonRitz()
+    {
+        if((int)$GLOBALS['SKIP_REMOTE'] === 1) {
+            return $this->markTestSkipped();
+        }
+        $options = new ScraperOptions(array(
+            'url' => 'http://www.tripadvisor.co.uk/Hotel_Review-g186338-d187591-Reviews-The_Ritz_London-London_England.html',
+        ));
+        $scraper = new Scraper($options);
+        $cache = \Zend\Cache\StorageFactory::factory(array(
+            'adapter' => 'filesystem',
+            'options' => array(
+                'cacheDir' => __DIR__ . '/../cache/',
+                'ttl' => 10,
+            ),
+        ));
+        $scraper->setCache($cache);
+
+        $reviews = $scraper->getReviews();
+        $this->assertInternalType('array', $reviews);
+        $this->assertGreaterThan(0, count($reviews));
+        $this->assertContainsOnlyInstancesOf('NetglueTripAdvisor\Model\Review', $reviews);
+
+        return $scraper;
+    }
+
+    /**
+     * @depends testRemoteLoadOfTheLondonRitz
+     */
+    public function testRemoteIsCached(Scraper $scraper)
+    {
+        $cache = $scraper->getCache();
+        $id = $scraper->getCacheId();
+        $this->assertTrue($cache->hasItem($id));
+        $html = $cache->getItem($id, $success);
+        $this->assertTrue($success);
+        $this->assertSame($html, $scraper->getHtml());
+    }
+
+    public function testSetOptionsAcceptsArray()
+    {
+        $options = array('url' => 'http://example.com/foo.html');
+        $scraper = new Scraper($options);
+        $this->assertInstanceOf('NetglueTripAdvisor\ScraperOptions', $scraper->getOptions());
+        $this->assertSame('http://example.com/foo.html', $scraper->getOptions()->getUrl());
+    }
+
+    public function testSetOptionsAcceptsTraversable()
+    {
+        $options = new \ArrayObject(array('url' => 'http://example.com/foo.html'));
+        $scraper = new Scraper($options);
+        $this->assertInstanceOf('NetglueTripAdvisor\ScraperOptions', $scraper->getOptions());
+        $this->assertSame('http://example.com/foo.html', $scraper->getOptions()->getUrl());
+    }
+
+    /**
+     * @expectedException NetglueTripAdvisor\Exception\InvalidArgumentException
+     */
+    public function testSetOptionsThrowsExceptionForInvalidOptions()
+    {
+        $scraper = new Scraper(new \stdClass);
+    }
+
 
 }
