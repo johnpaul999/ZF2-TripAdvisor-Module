@@ -1,21 +1,34 @@
-# Netglue Trip Advisor Feed ZF2 Module
+# ZF2 Trip Advisor Reviews Module
 
-Helpful tools and utilities for consuming and rendering feeds from Trip Advisor.
+## Install
 
-This module is not hugely flexible and doesn't perform any wondrous magic. It's basically a wrapper around Zend's Feed Reader that does a couple of bits and bobs to help get better information out of a trip advisor RSS feed. The feed instance will allow you to specify the number of reviews returned _(Bearing in mind that TA only provides the 10 most recent, this has limited appeal!)_ and the returned array, rather than Feed Entries are instances of `NetglueTripAdvisor\Model\Review`'s... The review instance provides the star rating as an integer _(out of a possible 5, so 0-5)_ strips the rating information from the review excerpt and provides just the review body.
+The only supported method of installation is with composer:
+    
+    $ composer require netglue/zf2-tripadvisor-module
 
-The module ships with some configuration help with caching - read the config files for comments.
+Once installed, activate the module by adding `NetglueTripAdvisor` to your application config and copy the `config/module.config.php.dist` to your autoload directory as something like `tripadvisor.global.php` and customise the options to suit your needs.
 
-There's also a ready to go view helper you can call with `$this->ngTripAdvisorFeed()` which simply renders a partial that is configured using the `template_map` settings in `view_manager` configuration so it can be easily overridden.
+## How it works
 
-## Install...
-... with composer... blah, blah. Composer key is `netglue/zf2-tripadvisor-module` and the module name for main config is `NetglueTripAdvisor` - There's nothing special about this module - it just needs ZF 2.
+There is a simple scraper that loads the remote TA reviews page selected and traverses the DOM to extract the reviews from the page.
 
-## Contribute...
-Yes please, it's all on Bitbucket at: [https://bitbucket.org/netglue/zf2-tripadvisor-module](https://bitbucket.org/netglue/zf2-tripadvisor-module)
+**This is susceptible to breaking if Trip Advisor alter their markup**
 
-## Todo
-Tests ... though it's not likely I'll find time to do this unless it becomes very important to others...
+## Future Plans
 
+If I get the time, I might consider persisting the reviews so that if/when TA do alter their markup, at least we'll be able to continue to present the old reviews.
 
+## Tests
+
+The module has a test suite you can run. `phpunit` has not been declared as a dev dependency so it must be installed separately if not.
+    
+    $ cd path/to/vendor/zf2-tripadvisor-module
+    $ composer install
+    $ phpunit
+
+## Contributing & Reporting Bugs
+
+Please feel free to report issues but without a pull request, I'm unlikely to be able to fix things in a timely manner. Please also include tests along with any changes.
+
+If you're using this module, it'd be nice to know, so drop me a line on gsteel at gmail
 
