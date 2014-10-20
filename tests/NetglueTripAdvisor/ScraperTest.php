@@ -77,6 +77,9 @@ class ScraperTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionThrownForUnreachableUrl(Scraper $scraper)
     {
+        if($scraper->getCache()) {
+            $scraper->getCache()->removeItem($scraper->getCacheId());
+        }
         $scraper->getHttpClient()->setUri('http://foo.bar.example.com/unknown.html');
         $scraper->getHtml();
     }

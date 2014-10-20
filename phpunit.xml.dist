@@ -18,7 +18,8 @@
     </logging>
     
     <php>
-        <var name="SKIP_REMOTE" value="1"/>
+        <!-- Change me to 1 to skip remote tests -->
+        <var name="SKIP_REMOTE" value="0"/>
     </php>
     
 </phpunit>
