@@ -1,7 +1,7 @@
 # ZF2 Trip Advisor Reviews Module
 
-[![Build Status](https://travis-ci.org/netglue/ZF2-Prismic-Module.svg?branch=master)](https://travis-ci.org/netglue/ZF2-Prismic-Module)
-[![Coverage Status](https://img.shields.io/coveralls/netglue/ZF2-Prismic-Module.svg)](https://coveralls.io/r/netglue/ZF2-Prismic-Module)
+[![Build Status](https://travis-ci.org/netglue/ZF2-TripAdvisor-Module.svg?branch=master)](https://travis-ci.org/netglue/ZF2-TripAdvisor-Module)
+[![Coverage Status](https://img.shields.io/coveralls/netglue/ZF2-TripAdvisor-Module.svg)](https://coveralls.io/r/netglue/ZF2-TripAdvisor-Module)
 
 
 ## Install
